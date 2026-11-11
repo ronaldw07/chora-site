@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chora — Sound. Time. Space.</title>
+  <meta name="description" content="Chora turns your MacBook's notch into a volume mixer, calendar, timer and music player.">
+  <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="index.html"><img src="logo.png" alt="" width="28" height="28">Chora<span class="badge" data-version-badge></span></a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="#about">About</a>
+      <a class="nav-download" href="https://github.com/ronaldw07/boring.notch/releases/latest/download/boringNotch.dmg">Download</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img class="hero-logo" src="logo.png" alt="Chora logo" width="160" height="160">
+      <h1>Chora</h1>
+      <p class="tagline">Sound. Time. Space.</p>
+      <p class="sub">Sound, time and space, right in your notch. A volume mixer, calendar, timer and music player that live at the top of your Mac.</p>
+      <a class="download" href="https://github.com/ronaldw07/boring.notch/releases/latest/download/boringNotch.dmg">Download for Mac</a>
+      <p class="req">Free · macOS 14 or later · Apple silicon</p>
+    </section>
+
+    <section id="features" class="section">
+      <h2 class="reveal">What's inside</h2>
+      <div class="features">
+        <article class="feature reveal">
+          <img src="shots/volume.png" alt="The volume panel: a master slider and a slider for each app" loading="lazy">
+          <h3>Volume mixer</h3>
+          <p>A master slider plus a slider for each app. Turn one app down without touching the rest.</p>
+        </article>
+        <article class="feature reveal">
+          <img src="shots/calendar.png" alt="The calendar tab: the day as a timeline of events" loading="lazy">
+          <h3>Calendar</h3>
+          <p>Your day as one wide timeline. Drag events to move or resize them, click for details, and see Google Tasks.</p>
+        </article>
+        <article class="feature reveal">
+          <img src="shots/timer.png" alt="The timer tab: a countdown ring and length chips" loading="lazy">
+          <h3>Timer</h3>
+          <p>Lengths down to the second, recent timers, a smooth ring, and undo when you reset by mistake.</p>
+        </article>
+        <article class="feature reveal">
+          <img src="shots/music.png" alt="The music player with album art and controls" loading="lazy">
+          <h3>Music</h3>
+          <p>Album art, a live visualizer and synced lyrics. Music and a running timer share the notch.</p>
+        </article>
+        <article class="feature reveal">
+          <img src="shots/shelf.png" alt="The shelf holding files dropped on the notch" loading="lazy">
+          <h3>Shelf and clipboard</h3>
+          <p>Drop files on the notch to keep them close, and get back anything you copied.</p>
+        </article>
+        <article class="feature reveal">
+          <img src="shots/updates.png" alt="An update prompt and the Option 1 to 5 shortcut" loading="lazy">
+          <h3>Stays up to date</h3>
+          <p>Signed updates install from inside the app. Switch tabs with ⌥1 to ⌥5.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section install">
+      <h2 class="reveal">Install</h2>
+      <ol>
+        <li>Download the app and drag it into Applications.</li>
+        <li>The first time only, run this in Terminal so macOS lets it open:</li>
+      </ol>
+      <pre><code>xattr -dr com.apple.quarantine /Applications/boringNotch.app</code></pre>
+      <p class="muted">Updates after that install themselves.</p>
+    </section>
+
+    <section class="section latest" data-latest hidden>
+      <h2>What's new</h2>
+      <p class="latest-version" data-latest-version></p>
+      <p class="latest-summary" data-latest-summary></p>
+      <a href="changelog.html">See the full changelog →</a>
+    </section>
+
+    <section id="about" class="section about">
+      <h2 class="reveal">About</h2>
+      <p>Hi, I'm Ronald. I design and build Chora, and I use it every day. I started from the open-source boring.notch and added the things I wanted from my notch: a per-app volume mixer, a calendar I can edit, a better timer, and updates that ship on their own.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Built on the open-source <a href="https://github.com/TheBoredTeam/boring.notch">boring.notch</a> by TheBoredTeam. Licensed GPL-3.0 · <a href="https://github.com/ronaldw07/boring.notch">Source code</a></p>
+  </footer>
+
+  <script src="changelog.js"></script>
+  <script src="reveal.js"></script>
+</body>
+</html>
