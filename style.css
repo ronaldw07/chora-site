@@ -149,6 +149,55 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.92em
 
 .about p { max-width: 640px; }
 
+/* Coming soon */
+
+.soon {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
+}
+.soon-item, .contact-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 20px;
+}
+.soon-item h3, .contact-card h3 { margin: 0 0 6px; font-size: 17px; }
+.soon-item p, .contact-card p { margin: 0; color: var(--muted); font-size: 15px; }
+.status {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 2px 9px;
+  border: 1px solid rgba(140, 209, 255, 0.3);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.contact-card { display: flex; flex-direction: column; }
+.contact-card p { margin-bottom: 18px; }
+.button {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--text);
+  color: #07080b;
+  font-weight: 600;
+  font-size: 15px;
+  transition: transform 160ms var(--ease-out);
+}
+.button:hover { text-decoration: none; }
+.button:active { transform: scale(0.97); }
+
 /* Scroll reveal: only once the script is running, so the page still shows without it */
 
 .js .reveal {
@@ -265,7 +314,7 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.92em
   .nav nav { gap: 14px; }
   .hero h1 { font-size: 48px; }
   .changelog-page h1 { font-size: 52px; }
-  .features { grid-template-columns: 1fr; }
+  .features, .contact { grid-template-columns: 1fr; }
 }
 
 /* Privacy policy */
