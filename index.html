@@ -17,18 +17,25 @@
       <a href="changelog.html">Changelog</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
-      <a class="nav-download" href="https://github.com/ronaldw07/boring.notch/releases/latest/download/Chora.dmg" data-download>Download</a>
+      <a class="nav-download" href="#download">Download</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero">
+    <section id="download" class="hero">
       <img class="hero-logo" src="logo.png" alt="Chora logo" width="160" height="160">
       <h1>Chora</h1>
       <p class="tagline">Sound. Time. Space.</p>
       <p class="sub">Sound, time and space, right in your notch. A volume mixer, calendar, timer and music player that live at the top of your Mac.</p>
-      <a class="download" href="https://github.com/ronaldw07/boring.notch/releases/latest/download/Chora.dmg" data-download>Download for Mac</a>
+      <a class="download" href="https://github.com/ronaldw07/boring.notch/releases/latest/download/Chora.dmg">Download for Mac</a>
       <p class="req">Free · macOS 14 or later · Apple silicon</p>
+      <ol class="steps">
+        <li>Open <strong>Chora.dmg</strong> and drag the app into Applications.</li>
+        <li>Paste this into Terminal once, so macOS lets it open:
+          <div class="cmd"><code>xattr -dr com.apple.quarantine /Applications/boringNotch.app</code><button type="button" data-copy>Copy</button></div>
+        </li>
+        <li>Open the app. Updates install on their own from then on.</li>
+      </ol>
     </section>
 
     <section id="features" class="section">
@@ -93,16 +100,6 @@
       </div>
     </section>
 
-    <section id="install" class="section install">
-      <h2 class="reveal">Install</h2>
-      <ol>
-        <li>Download Chora, open the file, and drag the app into Applications.<br><a class="button install-download" href="https://github.com/ronaldw07/boring.notch/releases/latest/download/Chora.dmg">Download Chora.dmg</a></li>
-        <li>The first time only, run this in Terminal so macOS lets it open:</li>
-      </ol>
-      <pre><code>xattr -dr com.apple.quarantine /Applications/boringNotch.app</code></pre>
-      <p class="muted">Updates after that install themselves.</p>
-    </section>
-
     <section class="section latest" data-latest hidden>
       <h2>What's new</h2>
       <p class="latest-version" data-latest-version></p>
@@ -138,6 +135,6 @@
 
   <script src="changelog.js"></script>
   <script src="reveal.js"></script>
-  <script src="download.js"></script>
+  <script src="copy.js"></script>
 </body>
 </html>

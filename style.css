@@ -129,9 +129,45 @@ main { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
 .feature h3 { margin: 0 4px 6px; font-size: 18px; }
 .feature p { margin: 0 4px; color: var(--muted); font-size: 15px; }
 
-/* Install */
+/* Install steps under the download button */
 
-.install ol { padding-left: 20px; margin: 0 0 14px; }
+.steps {
+  max-width: 640px;
+  margin: 36px auto 0;
+  padding: 18px 22px 18px 40px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  font-size: 15px;
+  color: #c3cad6;
+}
+.steps li { margin: 6px 0; padding-left: 4px; }
+.steps strong { color: var(--text); font-weight: 600; }
+.cmd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 4px;
+  padding: 8px 8px 8px 12px;
+  background: #0a0c11;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.cmd code { flex: 1; overflow-x: auto; white-space: nowrap; font-size: 12.5px; color: var(--text); scrollbar-width: none; }
+.cmd button {
+  flex: none;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: transform 160ms var(--ease-out);
+}
+.cmd button:active { transform: scale(0.97); }
 pre {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -327,6 +363,3 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.92em
 .legal-page p, .legal-page li { color: #c3cad6; }
 .legal-page li { margin: 8px 0; }
 .legal-page strong { color: var(--text); font-weight: 600; }
-
-.install li { margin: 6px 0; }
-.install-download { display: inline-block; margin: 10px 0 8px; }
