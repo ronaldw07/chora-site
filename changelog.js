@@ -7,7 +7,7 @@ const ROWS_BEFORE_SHOW_MORE = 5;
 
 /// One line per version line. A group without one just shows its updates.
 const GROUP_SUMMARIES = {
-  "0.8": "The app is now Chora, with a new icon, updates install on their own, and calendar changes can be undone.",
+  "0.8": "The app is now Chora, with a new icon, updates install on their own, calendar changes can be undone, and the day can run top to bottom.",
   "0.7": "A volume panel with a slider for each app, calendar events you can drag, resize and delete, and Google Tasks on the Calendar tab.",
   "0.6": "A Calendar tab with a wide day timeline, a bigger mirror, ⌥1–5 tab shortcuts, a calendar that refreshes itself, timer undo, and permissions that survive updates.",
   "0.5": "Timers down to the second with recent lengths, music and a timer together in the closed notch, lyrics that match the right song, and auto-updates.",
