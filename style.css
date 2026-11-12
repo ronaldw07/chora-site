@@ -110,8 +110,31 @@ main { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
   font-weight: 600;
   transition: transform 160ms var(--ease-out);
 }
+.download { transition: transform 160ms var(--ease-out), background 220ms var(--ease-out), color 220ms var(--ease-out), box-shadow 220ms var(--ease-out); }
+/* Hover: turns electric blue, hums with a tiny vibration, and the glow
+   pulses slowly. Pointer devices only, and off with reduced motion. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .download:hover {
+    text-decoration: none;
+    background: #6fc8ff;
+    color: #03121d;
+    animation: buzz 0.16s linear infinite, charge 1.3s ease-in-out infinite;
+  }
+}
+@keyframes buzz {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  20%  { transform: translate(0.7px, -0.5px) rotate(0.25deg); }
+  40%  { transform: translate(-0.6px, 0.4px) rotate(-0.2deg); }
+  60%  { transform: translate(0.5px, 0.6px) rotate(0.15deg); }
+  80%  { transform: translate(-0.7px, -0.4px) rotate(-0.25deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+@keyframes charge {
+  0%, 100% { box-shadow: 0 0 14px 1px rgba(80, 190, 255, 0.45), 0 0 34px 4px rgba(80, 190, 255, 0.18); }
+  50%      { box-shadow: 0 0 22px 3px rgba(110, 210, 255, 0.75), 0 0 56px 10px rgba(80, 190, 255, 0.32); }
+}
 .download:hover { text-decoration: none; }
-.download:active { transform: scale(0.97); }
+.download:active { animation: none; transform: scale(0.97); }
 .req { color: var(--muted); font-size: 13px; margin-top: 14px; }
 
 /* Sections */

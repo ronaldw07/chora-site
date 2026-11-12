@@ -501,6 +501,32 @@ function setUpCalendar(story) {
   ];
   let events = starting();
   let offset = 0;
+  // Undo, as in the app: a message says what the last change saved, with
+  // Undo beside it. Changes come back one at a time, newest first, with no
+  // time limit; the x keeps everything as it is.
+  const toast = root.querySelector("[data-cal-toast]");
+  const toastText = root.querySelector("[data-cal-toast-text]");
+  let history = []; // { before, message }
+  function showToast() {
+    const latest = history[history.length - 1];
+    if (latest) toastText.textContent = latest.message;
+    toast.classList.toggle("on", Boolean(latest));
+  }
+  function remember(before, message) {
+    history.push({ before, message });
+    showToast();
+  }
+  root.querySelector("[data-cal-undo]").addEventListener("click", () => {
+    if (!history.length) return;
+    events = history.pop().before;
+    closeDetails();
+    render();
+    showToast();
+  });
+  root.querySelector("[data-cal-dismiss]").addEventListener("click", () => {
+    history = [];
+    showToast();
+  });
   const nodes = new Map();
   const minutesToPt = (minutes) => (minutes / 60) * HOUR_PT;
 
@@ -584,6 +610,7 @@ function setUpCalendar(story) {
     const found = hit(down.target, down.clientX);
     if (!found) return;
     const origin = events.find((e) => e.id === found.id);
+    const before = events;
     const scale = track.getBoundingClientRect().width / TRACK_WIDTH;
     let moved = false;
     track.setPointerCapture(down.pointerId);
@@ -603,7 +630,12 @@ function setUpCalendar(story) {
       track.removeEventListener("pointerup", onEnd);
       track.removeEventListener("pointercancel", onEnd);
       found.node.classList.remove("dragging");
-      if (!moved) openDetails(found.id);
+      if (!moved) { openDetails(found.id); return; }
+      const after = events.find((e) => e.id === found.id);
+      if (after.start === origin.start && after.len === origin.len) return;
+      remember(before, after.len === origin.len
+        ? `Moved to ${formatTime(after.start)}`
+        : `Now ${formatTime(after.start)} – ${formatTime(after.start + after.len)}`);
     };
     track.addEventListener("pointermove", onMove);
     track.addEventListener("pointerup", onEnd);
@@ -650,6 +682,7 @@ function setUpCalendar(story) {
         return;
       }
       clearTimeout(confirmTimer);
+      remember(events, `Deleted ${event.title}`);
       events = events.filter((e) => e.id !== id);
       closeDetails();
       render();
@@ -670,7 +703,13 @@ function setUpCalendar(story) {
   }
 
   overlay.addEventListener("click", (event) => { if (event.target === overlay) closeDetails(); });
-  resetLink.addEventListener("click", () => { events = starting(); closeDetails(); render(); });
+  resetLink.addEventListener("click", () => {
+    events = starting();
+    history = [];
+    showToast();
+    closeDetails();
+    render();
+  });
   render();
 }
 
