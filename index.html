@@ -7,6 +7,7 @@
   <meta name="description" content="Chora turns your MacBook's notch into a volume mixer, calendar, timer and music player.">
   <link rel="icon" href="favicon.png">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="demo.css">
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
@@ -72,25 +73,161 @@
           <p>Signed updates install from inside the app. Switch tabs with ⌥1 to ⌥5.</p>
         </article>
       </div>
+
+      <p class="story-hint">Everything below works. Scroll, drag, click.</p>
+      <div class="story" data-story data-scene="0">
+        <div class="story-pin">
+          <div class="screen">
+            <div class="menubar" aria-hidden="true"><span><b>Finder</b> File Edit View Go Window Help</span><span>4:12 PM</span></div>
+
+            <div class="notch" data-notch>
+              <div class="notch-inner">
+                <div class="nh">
+                  <div class="nh-tabs">
+                    <button type="button" data-go="0" data-tab="0" aria-label="Home"><i data-i="house"></i></button>
+                    <button type="button" data-go="3" data-tab="3" aria-label="Shelf"><i data-i="tray"></i></button>
+                    <button type="button" data-go="4" data-tab="4" aria-label="Clipboard"><i data-i="clipboard"></i></button>
+                    <button type="button" data-go="5" data-tab="5" aria-label="Timer"><i data-i="timer"></i></button>
+                    <button type="button" data-go="6" data-tab="6" aria-label="Calendar"><i data-i="calendar"></i></button>
+                  </div>
+                  <div class="nh-cam"></div>
+                  <div class="nh-right">
+                    <button type="button" class="nh-btn" data-toggle="1" aria-label="Volume"><i data-i="speaker"></i></button>
+                    <button type="button" class="nh-btn" data-toggle="2" aria-label="Lyrics"><i data-i="quote"></i></button>
+                    <span class="nh-btn" aria-hidden="true"><i data-i="gear"></i></span>
+                    <span class="battery" aria-label="Battery 80%"><span>80%</span><i><b></b></i></span>
+                  </div>
+                </div>
+
+                <div class="nb">
+                  <div class="view view-home" data-view="0">
+                    <div class="player">
+                      <div class="art"><span class="art-badge"><i data-i="note"></i></span></div>
+                      <div class="player-main">
+                        <div class="song-row">
+                          <div class="song-text"><p class="song">Low Tide Hours</p><p class="artist">Ona Vale</p></div>
+                          <div class="viz" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="seek"><div class="seek-track"><b data-progress></b></div><div class="seek-times"><span data-music-time>0:00</span><span>3:12</span></div></div>
+                        <div class="controls">
+                          <button type="button" class="ctl" data-music-shuffle aria-label="Shuffle"><i data-i="shuffle"></i></button>
+                          <button type="button" class="ctl" data-music-restart aria-label="Previous"><i data-i="back"></i></button>
+                          <button type="button" class="ctl big" data-music-play aria-label="Play or pause"><i data-i="pause"></i></button>
+                          <button type="button" class="ctl" data-music-restart aria-label="Next"><i data-i="forward"></i></button>
+                          <button type="button" class="ctl" data-music-repeat aria-label="Repeat"><i data-i="repeat"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="slot">
+                      <div class="slot-panel" data-panel="1" data-volume>
+                        <div class="vol-master">
+                          <span class="vol-icon" data-master-icon></span>
+                          <div class="vs big" data-key="master" role="slider" tabindex="0" aria-label="Volume"><i class="vs-track"></i><i class="vs-fill"></i><i class="vs-knob"></i></div>
+                          <span class="vol-value" data-value-for="master"></span>
+                        </div>
+                        <div class="vol-apps">
+                          <div class="vol-app"><span class="app-icon" style="--c:#1ed760"><i data-i="note"></i></span><span class="app-name">Spotify</span><div class="vs" data-key="spotify" role="slider" tabindex="0" aria-label="Spotify volume"><i class="vs-track"></i><i class="vs-fill"></i><i class="vs-knob"></i></div><span class="app-value" data-value-for="spotify"></span></div>
+                          <div class="vol-app"><span class="app-icon" style="--c:#5865f2"><i data-i="bubble"></i></span><span class="app-name">Discord</span><div class="vs" data-key="discord" role="slider" tabindex="0" aria-label="Discord volume"><i class="vs-track"></i><i class="vs-fill"></i><i class="vs-knob"></i></div><span class="app-value" data-value-for="discord"></span></div>
+                          <div class="vol-app"><span class="app-icon" style="--c:#2d8cff"><i data-i="video"></i></span><span class="app-name">zoom.us</span><div class="vs" data-key="zoom" role="slider" tabindex="0" aria-label="Zoom volume"><i class="vs-track"></i><i class="vs-fill"></i><i class="vs-knob"></i></div><span class="app-value" data-value-for="zoom"></span></div>
+                          <div class="vol-app"><span class="app-icon" style="--c:#3a9bf0"><i data-i="globe"></i></span><span class="app-name">Safari</span><div class="vs" data-key="safari" role="slider" tabindex="0" aria-label="Safari volume"><i class="vs-track"></i><i class="vs-fill"></i><i class="vs-knob"></i></div><span class="app-value" data-value-for="safari"></span></div>
+                        </div>
+                      </div>
+                      <div class="slot-panel lyrics" data-panel="2" data-lyrics></div>
+                    </div>
+                  </div>
+
+                  <div class="view view-shelf" data-view="3">
+                    <div class="shelf-zone" data-shelf-zone>
+                      <div class="shelf-empty"><i data-i="tray"></i><span>Drop files here</span></div>
+                      <div class="shelf-items" data-shelf-items></div>
+                    </div>
+                  </div>
+
+                  <div class="view view-clip" data-view="4" data-clipboard>
+                    <div class="clip-bar"><button type="button" class="clip-undo" data-clip-undo>Undo</button><button type="button" class="clip-clear" data-clip-clear>Delete All</button></div>
+                    <div class="clip-list" data-clip-list></div>
+                  </div>
+
+                  <div class="view view-timer" data-view="5" data-timer>
+                    <div class="mode-picker"><button type="button" data-mode="timer" class="on">Timer</button><button type="button" data-mode="stopwatch">Stopwatch</button></div>
+                    <div class="timer-row">
+                      <div class="readout-slot">
+                        <svg class="ring" viewBox="0 0 88 88" aria-hidden="true"><circle class="ring-track" cx="44" cy="44" r="41"/><circle class="ring-fill" cx="44" cy="44" r="41"/></svg>
+                        <span class="readout"><span data-readout>5:00</span><span class="cs" data-cs></span></span>
+                      </div>
+                      <div class="timer-side">
+                        <div class="presets" data-presets>
+                          <button type="button" class="chip" data-secs="60">1m</button>
+                          <button type="button" class="chip on" data-secs="300">5m</button>
+                          <button type="button" class="chip" data-secs="600">10m</button>
+                          <button type="button" class="chip" data-secs="1500">25m</button>
+                          <button type="button" class="chip" data-secs="150">2:30</button>
+                          <i class="history" data-i="history"></i>
+                          <button type="button" class="chip" data-secs="45">45s</button>
+                        </div>
+                        <div class="timer-controls">
+                          <button type="button" class="round small" data-timer-reset aria-label="Reset"><i data-i="reset"></i></button>
+                          <button type="button" class="round" data-timer-play aria-label="Start"><i data-i="play"></i></button>
+                          <button type="button" class="round" data-timer-stop aria-label="Stop"><i data-i="stop"></i></button>
+                          <button type="button" class="round small" data-timer-undo aria-label="Undo reset"><i data-i="undo"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="view view-cal" data-view="6" data-calendar>
+                    <div class="cal-head">
+                      <i class="cal-chev" data-i="chevL"></i><span class="cal-day">Wed, Nov 11</span><i class="cal-chev" data-i="chevR"></i>
+                      <span class="allday" style="--c:#30d158">Veterans Day</span>
+                      <span class="cal-expand"><i data-i="expand"></i></span>
+                    </div>
+                    <div class="cal-viewport" data-cal-viewport><div class="cal-track" data-cal-track></div></div>
+                    <div class="cal-overlay" data-cal-overlay hidden></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="desk-files" data-desk aria-label="Files on the desktop">
+              <button type="button" class="file" draggable="true" data-file="resume"><i data-i="richtext" style="color:#ff453a"></i><span>Resume.pdf</span></button>
+              <button type="button" class="file" draggable="true" data-file="notch"><i data-i="photo" style="color:#0a84ff"></i><span>Notch.png</span></button>
+              <button type="button" class="file" draggable="true" data-file="demo"><i data-i="film" style="color:#d84cf5"></i><span>Demo.mov</span></button>
+            </div>
+          </div>
+
+          <div class="captions">
+            <div class="caption on" data-caption="0"><h3>Music</h3><p>Album art, a live visualizer and the controls you reach for, right under your camera.</p></div>
+            <div class="caption future" data-caption="1"><h3>Volume mixer</h3><p>A slider for every app. Turn Discord down without touching your music.</p></div>
+            <div class="caption future" data-caption="2"><h3>Synced lyrics</h3><p>Lyrics that follow the song. Click a line to jump to it.</p></div>
+            <div class="caption future" data-caption="3"><h3>Shelf</h3><p>Drop files on the notch to keep them close. Drag one up from the desktop.</p></div>
+            <div class="caption future" data-caption="4"><h3>Clipboard</h3><p>Everything you copied, one click from copying it again.</p></div>
+            <div class="caption future" data-caption="5"><h3>Timer</h3><p>Timers down to the second, a stopwatch, and undo when you reset by mistake.</p></div>
+            <div class="caption future" data-caption="6"><h3>Calendar</h3><p>Your day as one timeline. Drag an event to move it, pull an edge to resize, click it for details.</p><button type="button" class="caption-link" data-cal-reset hidden>Bring the events back</button></div>
+          </div>
+          <div class="dots" aria-label="Features">
+            <button type="button" data-go="0" aria-label="Music"></button><button type="button" data-go="1" aria-label="Volume"></button><button type="button" data-go="2" aria-label="Lyrics"></button><button type="button" data-go="3" aria-label="Shelf"></button><button type="button" data-go="4" aria-label="Clipboard"></button><button type="button" data-go="5" aria-label="Timer"></button><button type="button" data-go="6" aria-label="Calendar"></button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="soon" class="section">
       <h2 class="reveal">Coming soon</h2>
       <div class="soon">
         <article class="soon-item reveal">
-          <span class="status">In progress</span>
-          <h3>Switch your music to this Mac</h3>
-          <p>Move Spotify playback from your phone to your Mac from the notch, and bring your headphones with it.</p>
+          <span class="status">Planned</span>
+          <h3>Make the notch yours</h3>
+          <p>Pick which tabs show, put them in your own order, and choose what the closed notch displays.</p>
+        </article>
+        <article class="soon-item reveal">
+          <span class="status">Planned</span>
+          <h3>Undo in the calendar</h3>
+          <p>Moved, resized or deleted an event by mistake? Take it back with one click, like the timer.</p>
         </article>
         <article class="soon-item reveal">
           <span class="status">Planned</span>
           <h3>Faster Google Calendar</h3>
           <p>Connect Google Calendar directly, so changes made anywhere show up in the notch within seconds.</p>
-        </article>
-        <article class="soon-item reveal">
-          <span class="status">Planned</span>
-          <h3>Chora, all the way through</h3>
-          <p>The Chora name and icon in the app itself, with updates carrying over automatically.</p>
         </article>
         <article class="soon-item reveal">
           <span class="status">Your idea</span>
@@ -113,7 +250,7 @@
         <article class="contact-card reveal">
           <h3>Report a bug or request a feature</h3>
           <p>Tell me what went wrong or what you'd like next. The form asks for the details I need to act on it: steps to reproduce, your app and macOS version, and what you expected.</p>
-          <a class="button" href="#" data-feedback-form>Open the form</a>
+          <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSfXjYQT4DGm7UDg0RwTEFJR07rIt27WWSCMr_0hVcjNfF8teA/viewform" target="_blank" rel="noopener" data-feedback-form>Open the form</a>
         </article>
         <article class="contact-card reveal">
           <h3>Join the Discord</h3>
@@ -130,11 +267,13 @@
   </main>
 
   <footer class="footer">
-    <p>Built on the open-source <a href="https://github.com/TheBoredTeam/boring.notch">boring.notch</a> by TheBoredTeam. Licensed GPL-3.0 · <a href="https://github.com/ronaldw07/boring.notch">Source code</a> · <a href="privacy.html">Privacy</a></p>
+    <p><a href="https://github.com/ronaldw07/boring.notch">Source code</a> (GPL-3.0) · <a href="privacy.html">Privacy</a></p>
   </footer>
 
   <script src="changelog.js"></script>
   <script src="reveal.js"></script>
   <script src="copy.js"></script>
+  <script src="demo.js"></script>
+  <script src="spotlight.js"></script>
 </body>
 </html>
