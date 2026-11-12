@@ -10,6 +10,19 @@
 
 * { box-sizing: border-box; }
 
+/* Mouse glow, drawn behind everything (see spotlight.js) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle 110px at var(--mx, 50%) var(--my, 30%), rgba(150, 195, 230, 0.2), transparent 70%);
+  transition: opacity 400ms var(--ease-out);
+}
+.spotlight-on body::before { opacity: 1; }
+
 html { scroll-behavior: smooth; }
 
 body {
@@ -25,6 +38,8 @@ a:hover { text-decoration: underline; }
 
 /* Nav */
 
+/* The bar hangs from the top edge like the notch itself: near-black, with
+   deeply rounded bottom corners. */
 .nav {
   position: sticky;
   top: 0;
@@ -34,10 +49,10 @@ a:hover { text-decoration: underline; }
   justify-content: space-between;
   max-width: 1040px;
   margin: 0 auto;
-  padding: 14px 24px;
-  background: rgba(7, 8, 11, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 12px 32px 14px;
+  background: #020203;
+  border-radius: 0 0 30px 30px;
+  box-shadow: 0 0 36px rgba(140, 209, 255, 0.13), 0 0 90px rgba(140, 209, 255, 0.06), inset 0 -1px 0 rgba(140, 209, 255, 0.12);
 }
 
 .brand {
