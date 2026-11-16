@@ -407,3 +407,17 @@
 @media (prefers-reduced-motion: reduce) {
   .notch, .notch-inner, .view, .lyrics-list, .slot { transition: opacity 200ms ease; }
 }
+
+/* Calendar, top to bottom */
+.cal-expand + .cal-expand { margin-left: 0; }
+.notch button.cal-expand { background: rgba(255, 255, 255, 0.12); }
+button.cal-expand:active { transform: scale(0.94); }
+.cal-viewport.vertical::before, .cal-viewport.vertical::after { left: 0; right: 0; width: auto; height: 12px; }
+.cal-viewport.vertical::before { top: 0; bottom: auto; background: linear-gradient(180deg, #000, transparent); }
+.cal-viewport.vertical::after { top: auto; bottom: 0; background: linear-gradient(0deg, #000, transparent); }
+.cal-track.vertical .now-line::before { top: -2.25px; left: -3px; }
+.cal-track.vertical .cev { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 0; padding: 3px 5px 3px 8px; }
+.cal-track.vertical .cev.narrow { flex-direction: row; align-items: center; gap: 4px; padding-block: 0; }
+.cal-track.vertical .cev .grip { left: 50%; width: 10px; height: 2.5px; margin-left: -5px; }
+.cal-track.vertical .cev .grip.l { top: 3px; }
+.cal-track.vertical .cev .grip.r { top: auto; bottom: 3px; right: auto; }

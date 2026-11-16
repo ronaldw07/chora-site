@@ -115,6 +115,8 @@ const ICONS = {
   x: `<path ${S} stroke-width="3.2" d="M6 6l12 12M18 6 6 18"/>`,
   trash: `<path fill="currentColor" d="M9 3h6l.8 1.5H20v2H4v-2h4.2Zm-3.5 5h13l-1 12a2 2 0 0 1-2 1.8H8.5a2 2 0 0 1-2-1.8Z"/>`,
   check: `<path ${S} stroke-width="3.4" d="M5 12.5l4.5 4.5L19 7.5"/>`,
+  splitRows: `<g ${S} stroke-width="2"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M3.5 12h17"/></g>`,
+  splitCols: `<g ${S} stroke-width="2"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.2 4.5v15M14.8 4.5v15"/></g>`,
   calSmall: `<g ${S} stroke-width="2.2"><rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17"/></g>`,
   openApp: `<g ${S} stroke-width="2.4"><path d="M10 5H6.5A2.5 2.5 0 0 0 4 7.5v10A2.5 2.5 0 0 0 6.5 20h10a2.5 2.5 0 0 0 2.5-2.5V14"/><path d="M13 4h7v7"/><path d="M20 4l-9 9"/></g>`,
   docText: `<g ${S} stroke-width="2"><path d="M14 2.8H6.8A1.8 1.8 0 0 0 5 4.6v14.8a1.8 1.8 0 0 0 1.8 1.8h10.4a1.8 1.8 0 0 0 1.8-1.8V7.8Z"/><path d="M14 2.8v5h5"/><path d="M8.5 13h7M8.5 16.5h5"/></g>`,
@@ -490,6 +492,11 @@ function setUpCalendar(story) {
   const overlay = root.querySelector("[data-cal-overlay]");
   const resetLink = story.querySelector("[data-cal-reset]");
   const TRACK_WIDTH = (CAL_SPAN / 60) * HOUR_PT;
+  // Top to bottom, as in the app: 40pt an hour, times down the left.
+  const V_HOUR = 40;
+  const GUTTER = 34;
+  const orientButton = root.querySelector("[data-cal-orient]");
+  let vertical = false;
   const CALENDARS = { Work: "#0a84ff", School: "#bf5af2", Study: "#40c8e0", Personal: "#30d158", Friends: "#ff9f0a" };
   const starting = () => [
     { id: "standup", title: "Standup", calendar: "Work", start: 30, len: 15 },
@@ -528,36 +535,78 @@ function setUpCalendar(story) {
     showToast();
   });
   const nodes = new Map();
-  const minutesToPt = (minutes) => (minutes / 60) * HOUR_PT;
+  const minutesToPt = (minutes) => (minutes / 60) * (vertical ? V_HOUR : HOUR_PT);
+  const trackLength = () => (vertical ? (CAL_SPAN / 60) * V_HOUR : TRACK_WIDTH);
+  const viewLength = () => (vertical ? viewport.clientHeight : viewport.clientWidth);
 
-  // Hour labels and lines, the dimmed past, and the red now line.
-  track.style.width = `${TRACK_WIDTH}px`;
-  for (let h = 0; h < CAL_SPAN / 60; h++) {
-    const hour = (12 + h) % 24;
-    const label = el("span", "hour-label", `${hour % 12 || 12}${hour >= 12 ? "pm" : "am"}`);
-    label.style.left = `${h * HOUR_PT + 4}px`;
-    const line = el("span", "hour-line");
-    line.style.left = `${h * HOUR_PT}px`;
-    track.append(label, line);
+  // Hour labels and lines, the dimmed past, and the red now line, laid out
+  // across or down depending on the view.
+  function drawGrid() {
+    track.querySelectorAll(".grid").forEach((node) => node.remove());
+    track.classList.toggle("vertical", vertical);
+    viewport.classList.toggle("vertical", vertical);
+    track.style.width = vertical ? "100%" : `${TRACK_WIDTH}px`;
+    track.style.height = vertical ? `${trackLength()}px` : "";
+    const grid = [];
+    for (let h = 0; h < CAL_SPAN / 60; h++) {
+      const hour = (12 + h) % 24;
+      const label = el("span", "grid hour-label", `${hour % 12 || 12}${hour >= 12 ? "pm" : "am"}`);
+      const line = el("span", "grid hour-line");
+      if (vertical) {
+        label.style.cssText = `top:${h * V_HOUR - 5}px;left:0;width:${GUTTER - 6}px;text-align:right`;
+        line.style.cssText = `top:${h * V_HOUR}px;left:${GUTTER}px;right:0;width:auto;height:1px`;
+      } else {
+        label.style.left = `${h * HOUR_PT + 4}px`;
+        line.style.left = `${h * HOUR_PT}px`;
+      }
+      grid.push(label, line);
+    }
+    const past = el("span", "grid past");
+    const nowLine = el("span", "grid now-line");
+    const now = minutesToPt(CAL_NOW);
+    if (vertical) {
+      past.style.cssText = `top:0;left:${GUTTER}px;right:0;height:${now}px`;
+      nowLine.style.cssText = `top:${now - 0.75}px;left:${GUTTER}px;right:0;width:auto;height:1.5px`;
+    } else {
+      past.style.width = `${now}px`;
+      nowLine.style.left = `${now - 0.75}px`;
+    }
+    grid.push(past, nowLine);
+    track.prepend(...grid);
   }
-  const past = el("span", "past");
-  past.style.width = `${minutesToPt(CAL_NOW)}px`;
-  const nowLine = el("span", "now-line");
-  nowLine.style.left = `${minutesToPt(CAL_NOW) - 0.75}px`;
-  track.append(past, nowLine);
 
   function setOffset(value) {
-    offset = clamp(value, 0, TRACK_WIDTH - viewport.clientWidth);
-    track.style.transform = `translateX(${-offset}px)`;
+    offset = clamp(value, 0, Math.max(0, trackLength() - viewLength()));
+    track.style.transform = vertical ? `translateY(${-offset}px)` : `translateX(${-offset}px)`;
   }
-  // Like the app: "now" sits a third of the way across.
-  requestAnimationFrame(() => setOffset(minutesToPt(CAL_NOW) - viewport.clientWidth / 3));
-  // A sideways swipe scrolls the day; an up-and-down one still scrolls the page.
+  // Like the app: "now" sits a third of the way in.
+  const showNow = () => setOffset(minutesToPt(CAL_NOW) - viewLength() / 3);
+  drawGrid();
+  requestAnimationFrame(showNow);
+  // Across, a sideways swipe scrolls the day and an up-and-down one still
+  // scrolls the page. Down, an up-and-down swipe scrolls the day until it
+  // reaches an end, then the page takes over.
   viewport.addEventListener("wheel", (event) => {
+    if (vertical) {
+      const before = offset;
+      setOffset(offset + event.deltaY);
+      if (offset !== before) event.preventDefault();
+      return;
+    }
     if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
     event.preventDefault();
     setOffset(offset + event.deltaX);
   }, { passive: false });
+
+  orientButton.addEventListener("click", () => {
+    vertical = !vertical;
+    orientButton.replaceChildren(iconEl(vertical ? "splitCols" : "splitRows"));
+    orientButton.setAttribute("aria-label", vertical ? "Show the day across" : "Show the day down");
+    closeDetails();
+    drawGrid();
+    render();
+    showNow();
+  });
 
   function render() {
     const lanes = assignLanes(events);
@@ -575,53 +624,74 @@ function setUpCalendar(story) {
         track.appendChild(node);
       }
       const lane = lanes.get(event.id);
-      const width = Math.max(4, minutesToPt(event.len) - 2);
-      node.hidden = lane >= LANES;
-      node.style.left = `${minutesToPt(event.start) + 1}px`;
-      node.style.width = `${width}px`;
-      node.style.top = `${HOUR_ROW + lane * (LANE_H + LANE_GAP)}px`;
       node.querySelector(".cev-time").textContent = formatTime(event.start);
-      node.classList.toggle("narrow", width <= 48);
+      if (vertical) {
+        // Events at the same time share the width side by side.
+        const columns = 1 + Math.max(...events
+          .filter((e) => e.start < event.start + event.len && event.start < e.start + e.len)
+          .map((e) => lanes.get(e.id)));
+        const columnWidth = (track.clientWidth - GUTTER - 2) / columns;
+        const height = Math.max(14, minutesToPt(event.len) - 2);
+        node.hidden = false;
+        node.style.left = `${GUTTER + 1 + lane * columnWidth}px`;
+        node.style.width = `${columnWidth - 2}px`;
+        node.style.top = `${minutesToPt(event.start) + 1}px`;
+        node.style.height = `${height}px`;
+        node.classList.toggle("narrow", height <= 30);
+      } else {
+        const width = Math.max(4, minutesToPt(event.len) - 2);
+        node.hidden = lane >= LANES;
+        node.style.left = `${minutesToPt(event.start) + 1}px`;
+        node.style.width = `${width}px`;
+        node.style.top = `${HOUR_ROW + lane * (LANE_H + LANE_GAP)}px`;
+        node.style.height = "";
+        node.classList.toggle("narrow", width <= 48);
+      }
       node.classList.toggle("current", event.start <= CAL_NOW && CAL_NOW < event.start + event.len);
     });
     resetLink.hidden = events.length === starting().length;
   }
 
   // Press, drag and release, as the app does it: within 12pt of an edge
-  // resizes from that edge, anywhere else moves the whole event.
-  function hit(target, clientX) {
-    const node = target.closest(".cev");
+  // resizes from that edge, anywhere else moves the whole event. Across,
+  // the edges are left and right; down, top and bottom.
+  const along = (event) => (vertical ? event.clientY : event.clientX);
+  function hit(event) {
+    const node = event.target.closest(".cev");
     if (!node) return null;
     const rect = node.getBoundingClientRect();
-    const x = (clientX - rect.left) / (rect.width / node.offsetWidth);
-    const edges = node.offsetWidth > EDGE_GRAB * 3;
-    const mode = edges && x <= EDGE_GRAB ? "start" : edges && x >= node.offsetWidth - EDGE_GRAB ? "end" : "move";
+    const size = vertical ? node.offsetHeight : node.offsetWidth;
+    const pos = (along(event) - (vertical ? rect.top : rect.left)) / ((vertical ? rect.height : rect.width) / size);
+    const edges = size > EDGE_GRAB * 3;
+    const mode = edges && pos <= EDGE_GRAB ? "start" : edges && pos >= size - EDGE_GRAB ? "end" : "move";
     return { node, id: node.dataset.id, mode };
   }
 
   track.addEventListener("pointermove", (event) => {
     if (track.hasPointerCapture(event.pointerId)) return;
-    const found = hit(event.target, event.clientX);
-    track.style.cursor = !found ? "default" : found.mode === "move" ? "grab" : "ew-resize";
+    const found = hit(event);
+    track.style.cursor = !found ? "default" : found.mode === "move" ? "grab" : vertical ? "ns-resize" : "ew-resize";
   });
 
   track.addEventListener("pointerdown", (down) => {
     if (down.button !== 0) return;
-    const found = hit(down.target, down.clientX);
+    const found = hit(down);
     if (!found) return;
     const origin = events.find((e) => e.id === found.id);
     const before = events;
-    const scale = track.getBoundingClientRect().width / TRACK_WIDTH;
+    const rect = track.getBoundingClientRect();
+    const scale = vertical ? rect.height / track.offsetHeight : rect.width / TRACK_WIDTH;
+    const hourPt = vertical ? V_HOUR : HOUR_PT;
     let moved = false;
     track.setPointerCapture(down.pointerId);
 
     const onMove = (move) => {
-      const dx = move.clientX - down.clientX;
-      if (!moved && Math.abs(dx) < DRAG_THRESHOLD) return;
+      const delta = along(move) - along(down);
+      if (!moved && Math.abs(delta) < DRAG_THRESHOLD) return;
       moved = true;
       found.node.classList.add("dragging");
       if (found.mode === "move") track.style.cursor = "grabbing";
-      const minutes = (dx / scale / HOUR_PT) * 60;
+      const minutes = (delta / scale / hourPt) * 60;
       events = events.map((e) => (e.id === found.id ? dragged(origin, found.mode, minutes) : e));
       render();
     };
