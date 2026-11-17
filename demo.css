@@ -421,3 +421,12 @@ button.cal-expand:active { transform: scale(0.94); }
 .cal-track.vertical .cev .grip { left: 50%; width: 10px; height: 2.5px; margin-left: -5px; }
 .cal-track.vertical .cev .grip.l { top: 3px; }
 .cal-track.vertical .cev .grip.r { top: auto; bottom: 3px; right: auto; }
+
+/* New events in the demo */
+.cal-ghost { position: absolute; z-index: 5; padding: 3px 6px; border-radius: 5px; border: 1px solid var(--mac-accent); background: rgba(10, 132, 255, 0.35); color: #fff; font-size: 9px; font-weight: 600; white-space: nowrap; overflow: hidden; pointer-events: none; }
+.card-input { flex: 1; min-width: 0; padding: 0; border: 0; outline: none; background: none; color: #fff; font: inherit; font-size: 13px; font-weight: 600; }
+.card-input::placeholder { color: rgba(255, 255, 255, 0.35); }
+.card-preview { flex: 1; font-size: 10px; font-weight: 500; color: rgba(255, 255, 255, 0.45); }
+.card-preview.ready { color: rgba(255, 255, 255, 0.85); }
+.notch .pill.save { background: var(--mac-accent); color: #fff; }
+.notch .pill.save:disabled { background: rgba(255, 255, 255, 0.12); opacity: 0.6; cursor: default; }

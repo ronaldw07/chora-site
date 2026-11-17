@@ -84,7 +84,27 @@ function dragged(event, mode, deltaMinutes) {
   return { ...event, start: clamp(snap(event.start + deltaMinutes), 0, CAL_SPAN - event.len) };
 }
 
-if (typeof module !== "undefined") module.exports = { snap, formatTime, formatClock, assignLanes, dragged };
+/// Quick add, as in the app: "Lunch with Sam 1pm" or "Gym 6-7pm" becomes a
+/// title and a time on the demo's day. Times without am or pm read as the
+/// afternoon, since the demo's day runs noon to 10 PM. Null without a time
+/// or outside the day.
+function parseQuickAdd(text) {
+  const match = text.match(/(?:\bat\s+)?\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)?(?:\s*[-–]\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?)?\b/i);
+  if (!match) return null;
+  const [, h1, m1, mer1, h2, m2, mer2] = match;
+  const toMinutes = (h, m, mer) => {
+    let hour = Number(h) % 12;
+    if ((mer || "pm").toLowerCase() === "pm") hour += 12;
+    return hour * 60 + Number(m || 0) - CAL_START;
+  };
+  const start = toMinutes(h1, m1, mer1 || mer2);
+  const end = h2 ? toMinutes(h2, m2, mer2 || mer1) : start + 60;
+  if (start < 0 || end > CAL_SPAN || end <= start) return null;
+  const title = (text.slice(0, match.index) + " " + text.slice(match.index + match[0].length)).replace(/\s+/g, " ").trim();
+  return { title: title || "New event", start, len: end - start };
+}
+
+if (typeof module !== "undefined") module.exports = { snap, formatTime, formatClock, assignLanes, dragged, parseQuickAdd };
 
 // SF Symbols-style icons, drawn on a 24-point grid.
 const S = 'fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"';
@@ -113,6 +133,7 @@ const ICONS = {
   chevR: `<path ${S} stroke-width="3" d="M9 5l7 7-7 7"/>`,
   expand: `<g ${S} stroke-width="2.8"><path d="M14 4h6v6"/><path d="M20 4l-6 6"/><path d="M10 20H4v-6"/><path d="M4 20l6-6"/></g>`,
   x: `<path ${S} stroke-width="3.2" d="M6 6l12 12M18 6 6 18"/>`,
+  plus: `<path ${S} stroke-width="2.8" d="M12 5v14M5 12h14"/>`,
   trash: `<path fill="currentColor" d="M9 3h6l.8 1.5H20v2H4v-2h4.2Zm-3.5 5h13l-1 12a2 2 0 0 1-2 1.8H8.5a2 2 0 0 1-2-1.8Z"/>`,
   check: `<path ${S} stroke-width="3.4" d="M5 12.5l4.5 4.5L19 7.5"/>`,
   splitRows: `<g ${S} stroke-width="2"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M3.5 12h17"/></g>`,
@@ -676,7 +697,10 @@ function setUpCalendar(story) {
   track.addEventListener("pointerdown", (down) => {
     if (down.button !== 0) return;
     const found = hit(down);
-    if (!found) return;
+    if (!found) {
+      startCreating(down);
+      return;
+    }
     const origin = events.find((e) => e.id === found.id);
     const before = events;
     const rect = track.getBoundingClientRect();
@@ -770,7 +794,137 @@ function setUpCalendar(story) {
   function closeDetails() {
     overlay.hidden = true;
     overlay.replaceChildren();
+    hideGhost();
   }
+
+  // ---- New events: drag on an empty spot, or type one after + ----
+
+  let ghost = null;
+  function showGhost(start, len) {
+    if (!ghost) {
+      ghost = el("div", "cal-ghost");
+      track.appendChild(ghost);
+    }
+    if (vertical) {
+      ghost.style.cssText = `left:${GUTTER + 1}px;width:${track.clientWidth - GUTTER - 2}px;top:${minutesToPt(start)}px;height:${Math.max(14, minutesToPt(len) - 1)}px`;
+    } else {
+      ghost.style.cssText = `left:${minutesToPt(start) + 1}px;width:${Math.max(4, minutesToPt(len) - 2)}px;top:${HOUR_ROW}px;height:${LANES * (LANE_H + LANE_GAP) - LANE_GAP}px`;
+    }
+    ghost.textContent = `${formatTime(start)} – ${formatTime(start + len)}`;
+  }
+  function hideGhost() {
+    if (ghost) ghost.remove();
+    ghost = null;
+  }
+
+  /// Minutes into the demo's day under the pointer.
+  function minutesAt(event) {
+    const rect = track.getBoundingClientRect();
+    const along = vertical
+      ? (event.clientY - rect.top) / (rect.height / track.offsetHeight)
+      : (event.clientX - rect.left) / (rect.width / TRACK_WIDTH);
+    return clamp((along / (vertical ? V_HOUR : HOUR_PT)) * 60, 0, CAL_SPAN);
+  }
+
+  function startCreating(down) {
+    closeDetails();
+    const anchor = clamp(Math.floor(minutesAt(down) / SNAP) * SNAP, 0, CAL_SPAN - SNAP);
+    let span = { start: anchor, len: SNAP };
+    let moved = false;
+    track.setPointerCapture(down.pointerId);
+    const onMove = (move) => {
+      const delta = vertical ? move.clientY - down.clientY : move.clientX - down.clientX;
+      if (!moved && Math.abs(delta) < DRAG_THRESHOLD) return;
+      moved = true;
+      const at = snap(minutesAt(move));
+      const start = Math.min(anchor, at);
+      const end = Math.min(Math.max(anchor + SNAP, at), CAL_SPAN);
+      span = { start, len: end - start };
+      showGhost(span.start, span.len);
+    };
+    const onEnd = () => {
+      track.removeEventListener("pointermove", onMove);
+      track.removeEventListener("pointerup", onEnd);
+      track.removeEventListener("pointercancel", onEnd);
+      // A click makes an hour, like Google Calendar.
+      if (!moved) span = { start: anchor, len: Math.min(60, CAL_SPAN - anchor) };
+      showGhost(span.start, span.len);
+      openNewEvent(span.start, span.len);
+    };
+    track.addEventListener("pointermove", onMove);
+    track.addEventListener("pointerup", onEnd);
+    track.addEventListener("pointercancel", onEnd);
+  }
+
+  function addEvent(title, start, len) {
+    remember(events, `Added ${title}`);
+    events = [...events, { id: `new-${Date.now()}`, title, calendar: "Personal", start, len }];
+    closeDetails();
+    render();
+  }
+
+  function newCard(placeholder) {
+    const card = el("div", "card");
+    card.style.setProperty("--c", CALENDARS.Personal);
+    const input = el("input", "card-input");
+    input.type = "text";
+    input.placeholder = placeholder;
+    const close = button("card-close", "x");
+    close.setAttribute("aria-label", "Close");
+    close.addEventListener("click", closeDetails);
+    const head = el("div", "card-head");
+    head.append(el("span", "card-bar"), input, close);
+    input.addEventListener("keydown", (key) => { if (key.key === "Escape") closeDetails(); });
+    return { card, input, head };
+  }
+
+  function openNewEvent(start, len) {
+    const { card, input, head } = newCard("Add title");
+    const line = el("div", "card-line");
+    line.append(iconEl("calSmall"), el("span", "", `Wed, Nov 11 · ${formatTime(start)} – ${formatTime(start + len)} · Personal`));
+    const save = button("pill save", "", "Save");
+    const commit = () => addEvent(input.value.trim() || "New event", start, len);
+    save.addEventListener("click", commit);
+    input.addEventListener("keydown", (key) => { if (key.key === "Enter") commit(); });
+    const body = el("div", "card-body");
+    const actions = el("div", "card-actions");
+    actions.append(save);
+    body.append(line, actions);
+    card.append(head, body);
+    overlay.replaceChildren(card);
+    overlay.hidden = false;
+    input.focus({ preventScroll: true });
+  }
+
+  function openQuickAdd() {
+    closeDetails();
+    const { card, input, head } = newCard("Lunch with Sam 6pm");
+    const preview = el("span", "card-preview", "Type a time, like 3pm or 6-7pm");
+    const add = button("pill save", "", "Add");
+    add.disabled = true;
+    let parsed = null;
+    input.addEventListener("input", () => {
+      parsed = parseQuickAdd(input.value);
+      add.disabled = !parsed;
+      preview.textContent = parsed
+        ? `${parsed.title} · Wed, Nov 11 · ${formatTime(parsed.start)} – ${formatTime(parsed.start + parsed.len)} · Personal`
+        : "Type a time, like 3pm or 6-7pm";
+      preview.classList.toggle("ready", Boolean(parsed));
+    });
+    const commit = () => { if (parsed) addEvent(parsed.title, parsed.start, parsed.len); };
+    add.addEventListener("click", commit);
+    input.addEventListener("keydown", (key) => { if (key.key === "Enter") commit(); });
+    const body = el("div", "card-body");
+    const actions = el("div", "card-actions");
+    actions.append(add);
+    body.append(preview, actions);
+    card.append(head, body);
+    overlay.replaceChildren(card);
+    overlay.hidden = false;
+    input.focus({ preventScroll: true });
+  }
+
+  root.querySelector("[data-cal-add]").addEventListener("click", openQuickAdd);
 
   overlay.addEventListener("click", (event) => { if (event.target === overlay) closeDetails(); });
   resetLink.addEventListener("click", () => {
