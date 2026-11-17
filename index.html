@@ -6,13 +6,14 @@
   <title>Chora — Sound. Time. Space.</title>
   <meta name="description" content="Chora turns your MacBook's notch into a volume mixer, calendar, timer and music player.">
   <link rel="icon" href="favicon.png">
+  <link rel="preload" href="fonts/InstrumentSerif-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="demo.css">
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
   <header class="nav">
-    <a class="brand" href="index.html"><img src="logo.png" alt="" width="28" height="28">Chora<span class="badge" data-version-badge></span></a>
+    <a class="brand" href="index.html"><img src="logo.png" alt="" width="26" height="26">Chora<span class="badge" data-version-badge></span></a>
     <nav>
       <a href="#features">Features</a>
       <a href="changelog.html">Changelog</a>
@@ -24,12 +25,16 @@
 
   <main>
     <section id="download" class="hero">
-      <img class="hero-logo" src="logo.png" alt="Chora logo" width="160" height="160">
-      <h1>Chora</h1>
-      <p class="tagline">Sound. Time. Space.</p>
-      <p class="sub">Sound, time and space, right in your notch. A volume mixer, calendar, timer and music player that live at the top of your Mac.</p>
-      <a class="download" href="https://github.com/ronaldw07/boring.notch/releases/latest/download/Chora.dmg">Download for Mac</a>
-      <p class="req">Free · macOS 14 or later · Apple silicon</p>
+      <p class="eyebrow">Chora <span class="dash">—</span> Sound. Time. Space.</p>
+      <h1>Sound, time and space, <em>right in your notch.</em></h1>
+      <div class="hero-row">
+        <p class="sub">A volume mixer, calendar, timer and music player that live at the top of your Mac.</p>
+        <div class="get">
+          <a class="download" href="https://github.com/ronaldw07/boring.notch/releases/latest/download/Chora.dmg">Download for Mac</a>
+          <p class="req">Free · macOS 14 or later · Apple silicon</p>
+        </div>
+      </div>
+      <img class="hero-shot" src="shots/music.png" alt="Chora open in the notch, playing music with album art and controls" width="1440" height="512">
       <ol class="steps">
         <li>Open <strong>Chora.dmg</strong> and drag Chora into Applications.</li>
         <li>Paste this into Terminal once, so macOS lets it open:
@@ -39,8 +44,20 @@
       </ol>
     </section>
 
-    <section id="features" class="section">
-      <h2 class="reveal">What's inside</h2>
+    <section class="latest" data-latest hidden>
+      <p class="label">What's new</p>
+      <div>
+        <p class="latest-version" data-latest-version></p>
+        <p class="latest-summary" data-latest-summary></p>
+      </div>
+      <a href="changelog.html">See the full changelog →</a>
+    </section>
+
+    <section id="features" class="section band">
+      <div class="section-head">
+        <p class="label">01</p>
+        <h2 class="reveal">What's inside</h2>
+      </div>
       <div class="features">
         <article class="feature reveal">
           <img src="shots/volume.png" alt="The volume panel: a master slider and a slider for each app" loading="lazy">
@@ -213,8 +230,19 @@
       </div>
     </section>
 
+    <section id="about" class="section about">
+      <div class="section-head">
+        <p class="label">02</p>
+        <h2 class="reveal">About</h2>
+      </div>
+      <p class="maker reveal">Hi, I'm Ronald. I design and build Chora, and I use it every day. I started from the open-source boring.notch and added the things I wanted from my notch: a per-app volume mixer, a calendar I can edit, a better timer, and updates that ship on their own.</p>
+    </section>
+
     <section id="soon" class="section">
-      <h2 class="reveal">Coming soon</h2>
+      <div class="section-head">
+        <p class="label">03</p>
+        <h2 class="reveal">Coming soon</h2>
+      </div>
       <div class="soon">
         <article class="soon-item reveal">
           <span class="status">Planned</span>
@@ -234,15 +262,11 @@
       </div>
     </section>
 
-    <section class="section latest" data-latest hidden>
-      <h2>What's new</h2>
-      <p class="latest-version" data-latest-version></p>
-      <p class="latest-summary" data-latest-summary></p>
-      <a href="changelog.html">See the full changelog →</a>
-    </section>
-
     <section id="contact" class="section">
-      <h2 class="reveal">Contact</h2>
+      <div class="section-head">
+        <p class="label">04</p>
+        <h2 class="reveal">Contact</h2>
+      </div>
       <div class="contact">
         <article class="contact-card reveal">
           <h3>Report a bug or request a feature</h3>
@@ -257,10 +281,6 @@
       </div>
     </section>
 
-    <section id="about" class="section about">
-      <h2 class="reveal">About</h2>
-      <p>Hi, I'm Ronald. I design and build Chora, and I use it every day. I started from the open-source boring.notch and added the things I wanted from my notch: a per-app volume mixer, a calendar I can edit, a better timer, and updates that ship on their own.</p>
-    </section>
   </main>
 
   <footer class="footer">
@@ -271,6 +291,5 @@
   <script src="reveal.js"></script>
   <script src="copy.js"></script>
   <script src="demo.js"></script>
-  <script src="spotlight.js"></script>
 </body>
 </html>
