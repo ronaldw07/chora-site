@@ -37,10 +37,8 @@
       <img class="hero-shot" src="shots/music.png" alt="Chora open in the notch, playing music with album art and controls" width="1440" height="512">
       <ol class="steps">
         <li>Open <strong>Chora.dmg</strong> and drag Chora into Applications.</li>
-        <li>Paste this into Terminal once, so macOS lets it open:
-          <div class="cmd"><code>xattr -dr com.apple.quarantine /Applications/Chora.app</code><button type="button" data-copy>Copy</button></div>
-        </li>
-        <li>Open the app. Updates install on their own from then on.</li>
+        <li>Open Chora. When macOS says it can't check it, click <strong>Done</strong>.</li>
+        <li>Open <strong>System Settings → Privacy &amp; Security</strong>, scroll down and click <strong>Open Anyway</strong>. That's it: updates install on their own from then on.</li>
       </ol>
     </section>
 
@@ -290,7 +288,6 @@
 
   <script src="changelog.js"></script>
   <script src="reveal.js"></script>
-  <script src="copy.js"></script>
   <script src="demo.js"></script>
 </body>
 </html>
