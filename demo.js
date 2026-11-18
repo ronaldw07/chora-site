@@ -68,18 +68,14 @@ function assignLanes(events) {
   return lanes;
 }
 
-/// What a drag does, as in the app: "move" shifts the event, "start" and
-/// "end" move one edge. Edges land on 15 minutes; nothing gets shorter than
-/// 15 minutes or leaves the timeline.
+/// What a drag does, as in the app: "move" shifts the event, "end" moves its
+/// end edge. Edges land on 15 minutes; nothing gets shorter than 15 minutes
+/// or leaves the timeline.
 function dragged(event, mode, deltaMinutes) {
   const end = event.start + event.len;
   if (mode === "end") {
     const newEnd = clamp(snap(end + deltaMinutes), event.start + MIN_LEN, CAL_SPAN);
     return { ...event, len: newEnd - event.start };
-  }
-  if (mode === "start") {
-    const newStart = clamp(snap(event.start + deltaMinutes), 0, end - MIN_LEN);
-    return { ...event, start: newStart, len: end - newStart };
   }
   return { ...event, start: clamp(snap(event.start + deltaMinutes), 0, CAL_SPAN - event.len) };
 }
@@ -640,7 +636,7 @@ function setUpCalendar(story) {
         node = el("div", "cev");
         node.dataset.id = event.id;
         node.style.setProperty("--c", CALENDARS[event.calendar]);
-        node.append(el("span", "cev-title", event.title), el("span", "cev-time"), el("i", "grip l"), el("i", "grip r"));
+        node.append(el("span", "cev-title", event.title), el("span", "cev-time"), el("i", "grip r"));
         nodes.set(event.id, node);
         track.appendChild(node);
       }
@@ -673,9 +669,9 @@ function setUpCalendar(story) {
     resetLink.hidden = events.length === starting().length;
   }
 
-  // Press, drag and release, as the app does it: within 12pt of an edge
-  // resizes from that edge, anywhere else moves the whole event. Across,
-  // the edges are left and right; down, top and bottom.
+  // Press, drag and release, as the app does it: within 12pt of the end
+  // edge resizes, like Google Calendar; anywhere else moves the whole
+  // event. The end is the right edge across, the bottom edge down.
   const along = (event) => (vertical ? event.clientY : event.clientX);
   function hit(event) {
     const node = event.target.closest(".cev");
@@ -684,7 +680,7 @@ function setUpCalendar(story) {
     const size = vertical ? node.offsetHeight : node.offsetWidth;
     const pos = (along(event) - (vertical ? rect.top : rect.left)) / ((vertical ? rect.height : rect.width) / size);
     const edges = size > EDGE_GRAB * 3;
-    const mode = edges && pos <= EDGE_GRAB ? "start" : edges && pos >= size - EDGE_GRAB ? "end" : "move";
+    const mode = edges && pos >= size - EDGE_GRAB ? "end" : "move";
     return { node, id: node.dataset.id, mode };
   }
 
