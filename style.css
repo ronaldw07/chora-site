@@ -304,6 +304,7 @@ pre {
   letter-spacing: -0.01em;
 }
 .maker::first-letter { color: var(--accent); }
+.maker-photo { display: block; width: 96px; height: 96px; margin-bottom: 28px; border-radius: 50%; object-fit: cover; }
 .about p { max-width: 24ch; }
 
 /* Coming soon and Contact: ruled lists, not cards. */
