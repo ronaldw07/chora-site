@@ -25,7 +25,7 @@
 
   <main class="legal-page">
     <h1>Privacy Policy</h1>
-    <p class="updated">Effective 19 November 2026</p>
+    <p class="updated">Effective 24 November 2026</p>
 
     <section>
       <h2>The short version</h2>
@@ -70,6 +70,7 @@
         <li><strong>Clipboard history.</strong> Chora saves your last 50 copied items, including copied images, in its Application Support folder so they survive a restart. Chora doesn't currently detect passwords copied from password managers. If you copy one, delete it from the clipboard history, or clear the whole history.</li>
         <li><strong>Shelf.</strong> Files you drop on the notch are kept as references (macOS bookmarks) to the original files, not copies. Chora only shares a shelf file when you choose a destination from the macOS share menu, such as AirDrop or Mail. The destination you pick handles it from there.</li>
         <li><strong>Album art cache.</strong> Artwork is cached on disk so it doesn't have to be downloaded again.</li>
+        <li><strong>Task times.</strong> If you give a Google task a time in Chora, that time is saved in Chora's preferences file on your Mac. Google Tasks only keeps a task's day, so the time is never sent to Google.</li>
         <li><strong>Google sign-in token.</strong> If you connect Google, the sign-in token Google issues is stored in your Mac's Keychain. See <a href="#google">Google</a>.</li>
       </ul>
     </section>
@@ -102,8 +103,8 @@
       <p>Connecting Google is optional. It brings in Google Tasks and the parts of Google Calendar that macOS's calendar can't do. Here's exactly how it works:</p>
       <ul>
         <li><strong>Signing in.</strong> Chora opens Google's sign-in page in your web browser. You sign in with Google, not with Chora, and Chora never sees your Google password. Google then returns you to Chora through a temporary local address on your own Mac (127.0.0.1). That address only exists for the moment you're signing in. The sign-in uses PKCE, a standard safeguard that stops other apps from intercepting it.</li>
-        <li><strong>What Chora can access.</strong> Chora asks for three permissions. The Google Tasks scope (<code>https://www.googleapis.com/auth/tasks</code>) shows your task lists and tasks on the Calendar tab. The Google Calendar events scope (<code>https://www.googleapis.com/auth/calendar.events</code>) is used only when you act on an event in Chora: answering an invite, adding an event with guests or a Google Meet link, or changing an event's color, plus reading the colors of the events on the days you're looking at. The calendar list scope (<code>https://www.googleapis.com/auth/calendar.calendarlist.readonly</code>) matches your Google calendars to the ones on your Mac. Chora doesn't request access to your email, contacts, Drive or any other Google data.</li>
-        <li><strong>Where the data goes.</strong> Your tasks and calendar data travel directly between Google's servers and your Mac. They never pass through any server run by me or anyone else, and they aren't saved to disk. Chora fetches them fresh while the Calendar tab is open. When you add guests to an event, Google emails them the invite, as it does from Google Calendar.</li>
+        <li><strong>What Chora can access.</strong> Chora asks for three permissions. The Google Tasks scope (<code>https://www.googleapis.com/auth/tasks</code>) shows your task lists and tasks on the Calendar tab, and makes the changes you ask for: marking a task done, editing its name, day or details, or deleting it. The Google Calendar events scope (<code>https://www.googleapis.com/auth/calendar.events</code>) is used only when you act on an event in Chora: answering an invite, adding an event with guests or a Google Meet link, or changing an event's color, plus reading the colors of the events on the days you're looking at. The calendar list scope (<code>https://www.googleapis.com/auth/calendar.calendarlist.readonly</code>) matches your Google calendars to the ones on your Mac. Chora doesn't request access to your email, contacts, Drive or any other Google data.</li>
+        <li><strong>Where the data goes.</strong> Your tasks and calendar data travel directly between Google's servers and your Mac. They never pass through any server run by me or anyone else, and they aren't saved to disk. Chora keeps your tasks in memory while it's running and refreshes them about every 30 seconds, so they show the moment the Calendar tab opens; calendar data is fetched while the Calendar tab is open. When you add guests to an event, Google emails them the invite, as it does from Google Calendar.</li>
         <li><strong>Storage.</strong> The sign-in token Google issues is kept in your Mac's Keychain. That lets you stay signed in without signing in every time.</li>
         <li><strong>Disconnecting.</strong> Choose Sign out in Chora's settings to delete the token from your Mac. You can also revoke Chora's access at any time at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</li>
       </ul>

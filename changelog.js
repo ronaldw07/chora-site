@@ -7,7 +7,7 @@ const ROWS_BEFORE_SHOW_MORE = 5;
 
 /// One line per version line. A group without one just shows its updates.
 const GROUP_SUMMARIES = {
-  "0.9": "4 Days, Week and Month views with the weather, search, repeating events and reminders, keyboard shortcuts, and Google invites, Meet links and colors.",
+  "0.9": "4 Days, Week and Month views with the weather, search, custom repeats and reminders, copy and paste, keyboard shortcuts, Google invites, Meet links and colors, and Google Tasks you can edit.",
   "0.8": "The app is now Chora, with a new icon, updates install on their own, calendar changes can be undone, the day can run top to bottom, and you can add an event by dragging or typing.",
   "0.7": "A volume panel with a slider for each app, calendar events you can drag, resize and delete, and Google Tasks on the Calendar tab.",
   "0.6": "A Calendar tab with a wide day timeline, a bigger mirror, ⌥1–5 tab shortcuts, a calendar that refreshes itself, timer undo, and permissions that survive updates.",
