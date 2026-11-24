@@ -998,7 +998,7 @@ function setUpClipboard(root) {
   const KIND_ICON = { text: "docText", link: "link", file: "docText" };
   let items = [
     { id: 1, kind: "text", title: "Meet at 6 by the north entrance", sub: "Text · 2 min ago" },
-    { id: 2, kind: "link", title: "ronaldw07.github.io/chora-site", sub: "Link · 9 min ago" },
+    { id: 2, kind: "link", title: "getchora.vercel.app", sub: "Link · 9 min ago" },
     { id: 3, kind: "image", title: "Screenshot 2026-11-11 at 3.58 PM", sub: "Image · 14 min ago" },
     { id: 4, kind: "file", title: "Notes.pdf", sub: "File · 1 hr ago" },
     { id: 5, kind: "text", title: "git push fork HEAD:main", sub: "Text · 2 hr ago" },
