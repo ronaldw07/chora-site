@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://getchora.vercel.app/sitemap.xml
