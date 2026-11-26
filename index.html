@@ -73,7 +73,7 @@
         <article class="feature reveal">
           <img src="shots/timer.png" alt="The timer tab: a countdown ring and length chips" loading="lazy">
           <h3>Timer</h3>
-          <p>Lengths down to the second, recent timers, a smooth ring, and undo when you reset by mistake.</p>
+          <p>Up to five timers at once, lengths down to the second, recent timers, stopwatch laps, and undo when you cancel by mistake.</p>
         </article>
         <article class="feature reveal">
           <img src="shots/music.png" alt="The music player with album art and controls" loading="lazy">
@@ -172,22 +172,24 @@
                       <div class="readout-slot">
                         <svg class="ring" viewBox="0 0 88 88" aria-hidden="true"><circle class="ring-track" cx="44" cy="44" r="41"/><circle class="ring-fill" cx="44" cy="44" r="41"/></svg>
                         <span class="readout"><span data-readout>5:00</span><span class="cs" data-cs></span></span>
+                        <span class="lap-now" data-lap-now></span>
                       </div>
                       <div class="timer-side">
-                        <div class="presets" data-presets>
-                          <button type="button" class="chip" data-secs="60">1m</button>
-                          <button type="button" class="chip on" data-secs="300">5m</button>
-                          <button type="button" class="chip" data-secs="600">10m</button>
-                          <button type="button" class="chip" data-secs="1500">25m</button>
-                          <button type="button" class="chip" data-secs="150">2:30</button>
-                          <i class="history" data-i="history"></i>
-                          <button type="button" class="chip" data-secs="45">45s</button>
+                        <div class="choices">
+                          <div class="presets" data-presets>
+                            <button type="button" class="chip" data-secs="60">1m</button>
+                            <button type="button" class="chip on" data-secs="300">5m</button>
+                            <button type="button" class="chip" data-secs="600">10m</button>
+                            <button type="button" class="chip" data-secs="1500">25m</button>
+                            <button type="button" class="chip" data-secs="150">2:30</button>
+                          </div>
+                          <div class="recents"><span>Recents:</span><button type="button" class="chip" data-secs="45">45s</button><button type="button" class="chip" data-secs="1200">20m</button></div>
+                          <div class="laps" data-laps></div>
                         </div>
                         <div class="timer-controls">
-                          <button type="button" class="round small" data-timer-reset aria-label="Reset"><i data-i="reset"></i></button>
-                          <button type="button" class="round" data-timer-play aria-label="Start"><i data-i="play"></i></button>
-                          <button type="button" class="round" data-timer-stop aria-label="Stop"><i data-i="stop"></i></button>
-                          <button type="button" class="round small" data-timer-undo aria-label="Undo reset"><i data-i="undo"></i></button>
+                          <button type="button" class="round small" data-timer-cancel aria-label="Cancel"><i data-i="x"></i></button>
+                          <button type="button" class="round" data-timer-play aria-label="Play"><i data-i="play"></i></button>
+                          <button type="button" class="round small" data-timer-undo aria-label="Undo"><i data-i="undo"></i></button>
                         </div>
                       </div>
                     </div>
@@ -222,7 +224,7 @@
             <div class="caption future" data-caption="2"><h3>Synced lyrics</h3><p>Lyrics that follow the song. Click a line to jump to it.</p></div>
             <div class="caption future" data-caption="3"><h3>Shelf</h3><p>Drop files on the notch to keep them close. Drag one up from the desktop.</p></div>
             <div class="caption future" data-caption="4"><h3>Clipboard</h3><p>Everything you copied, one click from copying it again.</p></div>
-            <div class="caption future" data-caption="5"><h3>Timer</h3><p>Timers down to the second, a stopwatch, and undo when you reset by mistake.</p></div>
+            <div class="caption future" data-caption="5"><h3>Timer</h3><p>Several timers at once, a stopwatch with laps, and undo when you cancel by mistake.</p></div>
             <div class="caption future" data-caption="6"><h3>Calendar</h3><p>Your day across, or top to bottom. Drag an empty spot to add an event, or press + and type one. Drag an event to move it, pull its end to resize, and undo any change.</p><button type="button" class="caption-link" data-cal-reset hidden>Bring the events back</button></div>
           </div>
           <div class="dots" aria-label="Features">

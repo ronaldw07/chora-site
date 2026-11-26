@@ -117,6 +117,7 @@ const ICONS = {
   gear: `<g ${S} stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></g>`,
   play: `<path fill="currentColor" d="M7 4.6v14.8a1 1 0 0 0 1.5.9l12-7.4a1 1 0 0 0 0-1.8l-12-7.4A1 1 0 0 0 7 4.6Z"/>`,
   pause: `<g fill="currentColor"><rect x="6" y="4.5" width="4" height="15" rx="1.2"/><rect x="14" y="4.5" width="4" height="15" rx="1.2"/></g>`,
+  flag: `<g fill="currentColor"><rect x="5" y="3.5" width="2" height="17" rx="1"/><path d="M7 4.5h11l-2.6 4 2.6 4H7z"/></g>`,
   stop: `<rect fill="currentColor" x="5.5" y="5.5" width="13" height="13" rx="2.5"/>`,
   back: `<path fill="currentColor" d="M11 6.3v11.4a.8.8 0 0 1-1.3.6L2.6 12.6a.8.8 0 0 1 0-1.2l7.1-5.7a.8.8 0 0 1 1.3.6Zm10 0v11.4a.8.8 0 0 1-1.3.6l-7.1-5.7a.8.8 0 0 1 0-1.2l7.1-5.7a.8.8 0 0 1 1.3.6Z"/>`,
   forward: `<path fill="currentColor" transform="matrix(-1 0 0 1 24 0)" d="M11 6.3v11.4a.8.8 0 0 1-1.3.6L2.6 12.6a.8.8 0 0 1 0-1.2l7.1-5.7a.8.8 0 0 1 1.3.6Zm10 0v11.4a.8.8 0 0 1-1.3.6l-7.1-5.7a.8.8 0 0 1 0-1.2l7.1-5.7a.8.8 0 0 1 1.3.6Z"/>`,
@@ -412,9 +413,10 @@ function setUpTimer(root) {
   const chips = [...root.querySelectorAll("[data-secs]")];
   const modeButtons = [...root.querySelectorAll("[data-mode]")];
   const play = root.querySelector("[data-timer-play]");
-  const stop = root.querySelector("[data-timer-stop]");
-  const reset = root.querySelector("[data-timer-reset]");
+  const cancel = root.querySelector("[data-timer-cancel]");
   const undoButton = root.querySelector("[data-timer-undo]");
+  const lapNow = root.querySelector("[data-lap-now]");
+  const lapList = root.querySelector("[data-laps]");
   const CIRCUMFERENCE = 257.6;
 
   let mode = "timer";
@@ -422,9 +424,21 @@ function setUpTimer(root) {
   let remaining = target;
   let elapsed = 0;
   let running = false;
-  let undo = null; // { remaining, elapsed, running, until }
+  let laps = []; // stopwatch time at each lap, oldest first
+  let undo = null; // { remaining, elapsed, running, laps, until }
+  let shownIcons = "";
 
-  const canReset = () => running || (mode === "timer" ? remaining !== target : elapsed > 0);
+  // As in the app: the left button cancels, or laps a running stopwatch.
+  const isLapping = () => mode === "stopwatch" && running;
+  const canCancel = () => isLapping() || (mode === "timer" ? running || remaining !== target : elapsed > 0);
+  const stamp = (seconds) => `${formatClock(seconds)}.${String(Math.floor((seconds % 1) * 100)).padStart(2, "0")}`;
+
+  function renderLaps() {
+    const lengths = laps.map((at, i) => at - (i ? laps[i - 1] : 0)).reverse();
+    lapList.innerHTML = lengths
+      .map((length, i) => `<span class="lap-chip${i ? "" : " newest"}">Lap ${lengths.length - i} <b>${stamp(length)}</b></span>`)
+      .join("");
+  }
 
   function paint() {
     root.classList.toggle("stopwatch", mode === "stopwatch");
@@ -437,9 +451,17 @@ function setUpTimer(root) {
       readout.textContent = formatClock(elapsed);
       centis.textContent = `.${String(Math.floor((elapsed % 1) * 100)).padStart(2, "0")}`;
     }
-    play.classList.toggle("dim", running);
-    stop.classList.toggle("dim", !running);
-    reset.classList.toggle("dim", !canReset());
+    lapNow.textContent = mode === "stopwatch" && laps.length
+      ? `Lap ${laps.length + 1}  ${stamp(elapsed - laps[laps.length - 1])}` : "";
+    const icons = `${running}${isLapping()}`;
+    if (icons !== shownIcons) {
+      shownIcons = icons;
+      play.querySelector("[data-i]").innerHTML = icon(running ? "pause" : "play");
+      play.setAttribute("aria-label", running ? "Pause" : "Play");
+      cancel.querySelector("[data-i]").innerHTML = icon(isLapping() ? "flag" : "x");
+      cancel.setAttribute("aria-label", isLapping() ? "Lap" : "Cancel");
+    }
+    cancel.classList.toggle("dim", !canCancel());
   }
 
   function pick(seconds) {
@@ -463,24 +485,31 @@ function setUpTimer(root) {
     modeButtons.forEach((b) => b.classList.toggle("on", b === button));
     paint();
   }));
+  // One button: pauses what's running, otherwise plays.
   play.addEventListener("click", () => {
-    if (mode === "timer" && remaining <= 0) remaining = target;
-    running = true;
+    if (!running && mode === "timer" && remaining <= 0) remaining = target;
+    running = !running;
     paint();
   });
-  stop.addEventListener("click", () => { running = false; paint(); });
-  reset.addEventListener("click", () => {
-    if (!canReset()) return;
-    undo = { remaining, elapsed, running, until: performance.now() + TIMER_UNDO_MS };
-    remaining = target;
-    elapsed = 0;
-    running = false;
+  cancel.addEventListener("click", () => {
+    if (!canCancel()) return;
+    if (isLapping()) {
+      laps = [...laps, elapsed];
+    } else {
+      undo = { remaining, elapsed, running, laps, until: performance.now() + TIMER_UNDO_MS };
+      remaining = target;
+      elapsed = 0;
+      running = false;
+      laps = [];
+    }
+    renderLaps();
     paint();
   });
   undoButton.addEventListener("click", () => {
     if (!undo) return;
-    ({ remaining, elapsed, running } = undo);
+    ({ remaining, elapsed, running, laps } = undo);
     undo = null;
+    renderLaps();
     paint();
   });
 

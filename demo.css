@@ -273,7 +273,15 @@
 .view-timer.done .readout { color: #ff453a; }
 .timer-side { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .presets { display: flex; align-items: center; gap: 6px; transition: opacity 200ms var(--ease-out); }
-.view-timer.stopwatch .presets { opacity: 0; pointer-events: none; }
+.choices { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.recents { display: flex; align-items: center; gap: 6px; height: 18px; font-size: 10px; font-weight: 600; color: var(--mac-gray); transition: opacity 200ms var(--ease-out); }
+.view-timer.stopwatch .presets, .view-timer.stopwatch .recents { opacity: 0; pointer-events: none; }
+.laps { position: absolute; inset: 0; display: flex; align-items: center; gap: 6px; overflow-x: auto; scrollbar-width: none; opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease-out); }
+.view-timer.stopwatch .laps { opacity: 1; pointer-events: auto; }
+.lap-chip { display: inline-flex; align-items: center; gap: 4px; flex: none; height: 18px; padding: 0 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.1); color: var(--mac-gray); font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.lap-chip b { color: #fff; font-weight: 600; }
+.lap-chip.newest { background: rgba(10, 132, 255, 0.35); }
+.lap-now { position: absolute; bottom: 16px; font: 500 11px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--mac-gray); white-space: pre; }
 .chip { height: 18px; padding: 0 8px !important; border-radius: 99px; background: rgba(255, 255, 255, 0.1) !important; color: var(--mac-gray) !important; font-size: 10px !important; font-weight: 600; transition: background 160ms var(--ease-out), color 160ms var(--ease-out); }
 .chip.on { background: rgba(10, 132, 255, 0.35) !important; color: #fff !important; }
 .history { width: 11px; height: 11px; margin-left: 4px; color: var(--mac-gray); }
