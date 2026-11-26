@@ -27,7 +27,9 @@ function inline(text) {
   return escapeHTML(text)
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/\*\*([^*]+)\*\*/g, "$1")
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+    // Only https links become links, so a javascript: or data: target in the
+    // changelog can't turn into something clickable.
+    .replace(/\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/g, '<a href="$2">$1</a>');
 }
 
 /// "**Timer: an undo button.** After any…" → headline "Timer: an undo button.", detail "After any…".
